@@ -2,45 +2,52 @@
 #include <string.h>
 #include <stdlib.h>
 
-int main(void)
+int main()
 {
-  int year,month,date,n,i;
-  char gur[100],wav[100],final_file[100],sys_file_1[100],sys_file_2[100];
-  printf("Tell the year,month and date of records to be considered.\n");
-  scanf("%d%d%d",&year,&month,&date);
+  int year,month,date,i;
+  char gur[100],wav[100],final_file[100],sys_file[100];
+  printf("Tell the year,month and date of records to be considered?\n");
+  printf("Year : ");    scanf("%d",&year);
+  printf("\nMonth : ");   scanf("%d",&month);
+  printf("\nDate: ");   scanf("%d",&date);
+  printf("\n");
 
   for(i=0;i<24;i++)
   {
-    sprintf(gur,"dirf %d%d%d_%02d*",year,month,date,i);
-    system(str);
+    sprintf(gur,"dirf %d%d%d_%02d*.gcf",year,month,date,i);
+    system(gur);
     system("./gursei.m");
   }
   for(i=0;i<24;i++)
   {
-    sprintf(wav,"dirf %d-%d-%d-%02d*",year,month,date,i);
+    sprintf(wav,"dirf %d-%d-%d-%02d*S*",year,month,date,i);
     system(wav);
     system("./mwavetool.sh");
   }
 
-  sprintf(final_file,"%d-%d-%d-0000-M.DG64_001_BH_Z",year,month,date);
-  for(i=0;i<12;i++)
+  sprintf(final_file,"%d%d%d0000.mseed",year,month,date);
+  for(i=0;i<24;i++)
   {
-    sprintf(sys_file_1,"%d-%d-%d-%02d00-00M.DG64_001_BH_Z",year,month,date,2*i);
-    sprintf(sys_file_2,"%d-%d-%d-%02d00-00M.DG64_001_BH_Z",year,month,date,2*i+1);
-    FILE *fp1 = fopen(sys_file_1, "r");
-    FILE *fp2 = fopen(sys_file_2, "r")
-    FILE *fp  = fopen(final_file, "w");
-    char c;
+    sprintf(sys_file,"%d-%d-%d-%02d00-00M.DG64_001BH_Z",year,month,date,i);
 
-    while ((c = fgetc(fp1)) != EOF)
-      fputc(c, fp);
+    FILE *fp1 = fopen(sys_file, "r");
 
-    while ((c = fgetc(fp2)) != EOF)
-      fputc(c, fp);
+    if(fp1 == NULL)
+      printf("Could not open file %s",sys_file);
 
-    fclose(fp1);
-    fclose(fp2);
-    fclose(fp);
+    else{
+      FILE *fp  = fopen(final_file, "w");
+      char c;
+      while ((c = fgetc(fp1)) != EOF)
+        fputc(c, fp);
+
+      fclose(fp);
+      fclose(fp1);
+    }
+
   }
+  printf("\n\n Output file is %s\n",final_file");
+  system("rm *S*");
+  system("rm *M*");
   return 0;
 }
