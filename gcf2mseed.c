@@ -13,26 +13,24 @@ int main()
   printf("\nEnter Station Code : ");
   scanf("%s\n",stn_code );
 
-  int j[12],j_day;
-  j[0]=31; j[1]=28+j[0]; j[2]=j[1]+31; j[3]=j[2]+30;
-  j[4]=j[3]+31; j[5]=j[4]+30; j[6] = j[5]+31;
-  j[7]=j[6]+31; j[8]=j[7]+30; j[9]=j[8]+31;
-  j[10]=j[9]+30; j[11]=j[10]+31;
+  int julian = date;                          //Computes Julian day
+  int mm = month-1;
+  switch(mm)
+  {
+  case 11 : julian=julian+30;
+  case 10 : julian=julian+31;
+  case 9 : julian=julian+30;
+  case 8 : julian=julian+31;
+  case 7 : julian=julian+31;
+  case 6: julian=julian+30;
+  case 5: julian=julian+31;
+  case 4 : julian=julian+30;
+  case 3 : julian=julian+31;
+  case 2 : if(yy%4==0)julian=julian+29;
+               else julian=julian+28;
+  case 1 : julian=julian+31;
+  }
 
-  if(year%4 == 0)                                 //Checking Leap Year
-  {
-    for(i=1;i<12;i++)
-      j[i]++;
-  }
-  if(month>1)                                   //Computation of Julian Days
-    j_day=j[month-2]+date;
-  else
-  {
-    if(month ==1)
-      j_day=date;
-    else
-      j_day = j[0]+date;
-  }
   for(i=0;i<24;i++)                             //Run Gursei command
   {
     sprintf(gur,"dirf %d%d%d_%02d*.gcf",year,month,date,i);
@@ -46,7 +44,7 @@ int main()
     system("./mwavetool.sh");
   }
 
-  sprintf(final_file,"%s%d%d.seed",stn_code,year,j_day);          //Combining Files
+  sprintf(final_file,"%s%d%d.seed",stn_code,year,julian);          //Combining Files
   for(i=0;i<24;i++)
   {
     sprintf(sys_file,"%d-%d-%d-%02d00-00M.%s__001BH_Z",year,month,date,i,stn_code);
