@@ -5,7 +5,7 @@
 int main()
 {
   int year,month,date,i;
-  char gur[100],wav[100],final_file[100],sys_file[100],stn_code[100],c;
+  char gur[100],wav[100],final_file[100],sys_file[100],stn_code[100],cat_cmd[100],c;
   printf("Tell the year,month and date of records to be considered?\n");  //Taking input from user
   printf("Year : ");    scanf("%d",&year);
   printf("\nMonth : ");   scanf("%d",&month);
@@ -26,7 +26,7 @@ int main()
   case 5: julian=julian+31;
   case 4 : julian=julian+30;
   case 3 : julian=julian+31;
-  case 2 : if(yy%4==0)julian=julian+29;
+  case 2 : if(year%4==0)julian=julian+29;
                else julian=julian+28;
   case 1 : julian=julian+31;
   }
@@ -45,26 +45,11 @@ int main()
   }
 
   sprintf(final_file,"%s%d%d.seed",stn_code,year,julian);          //Combining Files
-  for(i=0;i<24;i++)
-  {
-    sprintf(sys_file,"%d-%d-%d-%02d00-00M.%s__001BH_Z",year,month,date,i,stn_code);
 
-    FILE *fp1 = fopen(sys_file, "r");
+  sprintf(cat_cmd,"cat /home/guest1/Shivam/%d-%d-%d*M* > %s",year,month,date,final_file);
 
-    if(fp1 == NULL)
-      printf("Could not open file %s",sys_file);
+  system(cat_cmd);
 
-    else{
-      FILE *fp  = fopen(final_file, "w");
-
-      while ((c = fgetc(fp1)) != EOF)
-        fputc(c, fp);
-
-      fclose(fp);
-      fclose(fp1);
-    }
-
-  }
   printf("\n\n Output file is %s\n",final_file);
   system("rm *S*");                                     //Remove Seisan & MSeed files
   system("rm *M*");
